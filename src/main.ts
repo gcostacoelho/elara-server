@@ -10,9 +10,11 @@ async function bootstrap() {
 
     const config = new DocumentBuilder()
         .setTitle('Elara server')
+        .setDescription('Endpoints for provide a services to Elara')
         .setVersion('1.0')
         .addBearerAuth()
-        .addTag('hello')
+        .addTag('Authorization', 'Endpoints for generate and validate a token')
+        .addTag('User', 'Endpoints for settings to the users')
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
