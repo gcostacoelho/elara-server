@@ -8,7 +8,7 @@ import {
     Res
 } from '@nestjs/common';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Response, Request } from "express";
 import { AuthService } from '../services/auth.service';
 
 @ApiTags('Authorization')
@@ -26,13 +26,21 @@ export class AuthController {
         description: "Erro de validação dos dados pedidos"
     })
 
-    getTokenBearer(@Res() resp: Response) { }
+    async getTokenBearer(@Res() resp: Response) {
+        const data = await this.authService.getTokenBearer();
 
+        return resp.status(data.statusCode).json(data.body);
+    }
+    
     @ApiHeader({
-        name: 'Auth',
+        name: 'authorization',
         description: 'Insert your token here',
         required: true
     })
     @Get('validation')
-    validateToken(@Req() req: Request, @Res() resp: Response) { }
+    async validateToken(@Req() req: Request, @Res() resp: Response) {
+        const data = await this.authService.validateToken(req);
+
+        return resp.status(data.statusCode).json(data.body);
+    }
 }
