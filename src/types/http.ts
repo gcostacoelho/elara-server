@@ -27,3 +27,8 @@ export const notFound = (errorMessage: any): HttpResponse => ({
     statusCode: 404,
     body: errorMessage,
 });
+
+export const serviceError = (errorMessage: any): HttpResponse => ({
+    statusCode: 500,
+    body: errorMessage
+});
