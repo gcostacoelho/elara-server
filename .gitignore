@@ -36,3 +36,9 @@ lerna-debug.log*
 
 # Environments
 .env
+
+#Prisma migrations
+migrations/
+
+# DBs
+*.db*
