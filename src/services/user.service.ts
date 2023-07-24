@@ -79,4 +79,20 @@ export class UserService implements Crud {
             return serviceError(error);
         }
     }
+
+    async UserWithPass(email: string): Promise<HttpResponse> {
+        try {
+            const user = await this.prisma.usuario.findUnique({
+                where: { email }
+            });
+
+            if (!user) {
+                return badRequest('Usuário não encontrado');
+            }
+
+            return success(user);
+        } catch (error) {
+            return serviceError(error);
+        }
+    }
 }

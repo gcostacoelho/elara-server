@@ -1,37 +1,62 @@
-import { Injectable } from '@nestjs/common';
-import * as jwt from "jsonwebtoken";
+import { Inject, Injectable } from '@nestjs/common';
 import { Request } from "express";
-import { HttpResponse, badRequest, success, unauthorized } from 'src/types/http';
+import { HttpResponse, badRequest, serviceError, success, unauthorized } from 'src/types/http';
+import { UserService } from './user.service';
+import { User } from 'src/Models/User/User';
+import { UserDtoLogin } from 'src/Models/User/Dtos/UserDtoLogin';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+    constructor(
+        private readonly jwtService: JwtService,
+        private readonly userService: UserService
+    ) { }
 
-    async getTokenBearer(): Promise<HttpResponse> {
+    async getTokenBearer(data: UserDtoLogin): Promise<HttpResponse> {
         try {
-            const token = await jwt.sign({ expiresIn: "300" }, process.env.SECRET);
+            const userData = await this.userService.UserWithPass(data.email);
 
-            return success({ "token": token });
+            const infos = userData.body;
+            const user = new User(infos.nome, infos.email, infos.dataNascimento, data.senha);
+
+            const hashEqualPass = await user.compareHashWithPass(infos.senha);
+
+            if (hashEqualPass) {
+                const payload = {
+                    sub: infos.id,
+                    email: infos.email
+                }
+
+                return success({
+                    "access_token": await this.jwtService.signAsync(payload)
+                })
+            }
+
+            return badRequest('Senha incorreta');
+
         } catch (error) {
-            return badRequest("Erro ao obter token de acesso");
+            return serviceError("Erro ao obter token de acesso");
         }
     }
 
-    async validateToken(req: Request) {
-        const secretWord: string = process.env.SECRET;
+    async validateToken(auth: string): Promise<HttpResponse> {
+        try {
+            const validToken = await this.jwtService.verifyAsync(auth);
+            const valid = {
+                "valid": true,
+                "access_token": auth
+            }
 
-        if (req.headers.authorization) {
-            const tokenSplited: string = req.headers.authorization.split(' ')[1];
+            if (validToken) {
+                return success(valid);
+            }
 
-            const error: any = jwt.verify(tokenSplited, secretWord, 
-                (err: any) => {
-                    if (err) return err;
-                });
-
-            return error ? unauthorized() : success({
-                "validToken": true
-            })
+        } catch (error) {
+            return success({
+                "valid": "Token inválido",
+                error
+            });
         }
-        
-        return unauthorized();
     }
 }

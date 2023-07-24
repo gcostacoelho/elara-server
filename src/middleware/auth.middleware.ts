@@ -1,23 +1,25 @@
 import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-    use(req: Request, res: Response, next: NextFunction) {
-        const secretWord: any = process.env.SECRET;
+    constructor(private readonly jwtService: JwtService) { }
+    
+    async use(req: Request, res: Response, next: NextFunction) {
+        try {
+            if (req.headers.authorization) {
+                const tokenSplit = req.headers.authorization.split(" ")[1];
 
-        if (req.headers.authorization) {
-            const tokenSplited: string = req.headers.authorization.split(' ')[1];
+                const valid = await this.jwtService.verifyAsync(tokenSplit);
 
-            const error: any = jwt.verify(tokenSplited, secretWord, 
-                (err: any) => {
-                    if (err) return err;
-                });
+                return valid ? next() : res.status(HttpStatus.UNAUTHORIZED).json('Unauthorized');
+            }
 
-            return error ? res.status(HttpStatus.UNAUTHORIZED).json('Unauthorized') : next()
+            return res.status(HttpStatus.UNAUTHORIZED).json('Unauthorized');
+        } catch (error) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json();
         }
-        
-        return res.status(HttpStatus.UNAUTHORIZED).json('Unauthorized');
+
     }
 }

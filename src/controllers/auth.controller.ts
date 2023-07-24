@@ -4,6 +4,7 @@ import {
     Get,
     Header,
     HttpStatus,
+    Param,
     Post,
     Req,
     Res
@@ -11,6 +12,7 @@ import {
 import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from "express";
 import { AuthService } from '../services/auth.service';
+import { UserDtoLogin } from 'src/Models/User/Dtos/UserDtoLogin';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -27,23 +29,18 @@ export class AuthController {
         description: "Erro de validação dos dados pedidos"
     })
 
-    async getTokenBearer(@Res() resp: Response) {
-        const data = await this.authService.getTokenBearer();
+    async getTokenBearer(@Body() userInfo: UserDtoLogin, @Res() resp: Response) {
+        const data = await this.authService.getTokenBearer(userInfo);
 
         return resp.status(data.statusCode).json(data.body);
     }
     
-    @ApiHeader({
-        name: 'authorization',
-        description: 'Insert your token here',
-        required: true
-    })
     /*
     Endpoint only works in postman, don't ask me why
     */
-    @Get('validation')
-    async validateToken(@Req() req: Request, @Res() resp: Response) {        
-        const data = await this.authService.validateToken(req);
+    @Get('validation/:token')
+    async validateToken(@Param('token') auth: string, @Res() resp: Response) {        
+        const data = await this.authService.validateToken(auth);
 
         return resp.status(data.statusCode).json(data.body);
     }
