@@ -32,6 +32,5 @@ export class User {
         const isMatch = await bcrypt.compare(this.senha, hash);
 
         return isMatch;
-
     }
 }

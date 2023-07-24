@@ -9,9 +9,12 @@ import { AuthModule } from './auth.module';
 })
 
 export class AppModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(AuthMiddleware).exclude(
-            { path: "users/add", method: RequestMethod.POST },
-        ).forRoutes(UserController);
-    }
+    /*
+        Comment for development
+    */
+    // configure(consumer: MiddlewareConsumer) {
+    //     consumer.apply(AuthMiddleware).exclude(
+    //         { path: "users/add", method: RequestMethod.POST },
+    //     ).forRoutes(UserController);
+    // }
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { error } from 'console';
 import { UserDtoPass } from 'src/Models/User/Dtos/UserDtoPass';
 import { User } from 'src/Models/User/User';
 import { PrismaConfig } from 'src/database/prismaConfig';
@@ -15,23 +14,52 @@ export class UserService implements Crud {
             const user = new User(data.nome, data.email, data.dataNascimento, data.senha);
 
             data.senha = await user.encriptyPassword();
-    
+
             const newUser = await this.prisma.usuario.create({
                 data,
             });
-    
-            return created(data);
+
+            return created(newUser);
         } catch (error) {
             return serviceError(error);
         }
     }
 
-    Read(id: string = ""): Promise<HttpResponse> {
-        throw new Error('Method not implemented.');
+    async Read(id: string): Promise<HttpResponse> {
+        try {
+            const user = await this.prisma.usuario.findUnique({
+                where: { id }
+            });
+
+            if (!user) {
+                return badRequest('Usuário não encontrado');
+            }
+
+            const userWithoutPass = {
+                "id": user.id,
+                "nome": user.nome,
+                "email": user.email
+            }
+
+            return success(userWithoutPass);
+        } catch (error) {
+            return serviceError(error);
+        }
+
     }
 
-    Update(data: Object, id: string): Promise<HttpResponse> {
-        throw new Error('Method not implemented.');
+    async Update(data: UserDtoPass, id: string): Promise<HttpResponse> {
+        try {
+            await this.prisma.usuario.updateMany({
+                where: { id },
+                data,
+            });
+    
+            return success(data); 
+
+        } catch (error) {
+            return serviceError(error);
+        }
     }
 
     Delete(id: string): Promise<HttpResponse> {
