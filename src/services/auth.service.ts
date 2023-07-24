@@ -14,26 +14,24 @@ export class AuthService {
         } catch (error) {
             return badRequest("Erro ao obter token de acesso");
         }
-
-
     }
 
     async validateToken(req: Request) {
-        const token: string = req.headers.authorization;
+        const secretWord: string = process.env.SECRET;
+
+        if (req.headers.authorization) {
+            const tokenSplited: string = req.headers.authorization.split(' ')[1];
+
+            const error: any = jwt.verify(tokenSplited, secretWord, 
+                (err: any) => {
+                    if (err) return err;
+                });
+
+            return error ? unauthorized() : success({
+                "validToken": true
+            })
+        }
         
-        jwt.verify(token, process.env.SECRET, (err: any, decode: any) => {
-            if (err) {
-                console.log('Error', err);
-                
-                return unauthorized();
-            }
-
-            return success({
-                "auth": true,
-                "description": "Bearer token invalid"
-            });
-        })
-
         return unauthorized();
     }
 }

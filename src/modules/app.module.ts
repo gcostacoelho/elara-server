@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { AuthMiddleware } from 'src/middleware/auth/auth.middleware';
+import { AuthMiddleware } from 'src/middleware/auth.middleware';
 import { UserModule } from './user.module';
 import { UserController } from 'src/controllers/user.controller';
 import { AuthModule } from './auth.module';
@@ -9,12 +9,9 @@ import { AuthModule } from './auth.module';
 })
 
 export class AppModule {
-    /*
-        Comment for development
-    */
-    // configure(consumer: MiddlewareConsumer) {
-    //     consumer.apply(AuthMiddleware).exclude(
-    //         { path: "users/add", method: RequestMethod.POST },
-    //     ).forRoutes(UserController);
-    // }
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(AuthMiddleware).exclude(
+            { path: "users/add", method: RequestMethod.POST },
+        ).forRoutes(UserController);
+    }
 }
