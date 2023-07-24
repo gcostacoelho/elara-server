@@ -26,10 +26,10 @@ export class UserService implements Crud {
         }
     }
 
-    async Read(id: string): Promise<HttpResponse> {
+    async Read(email: string): Promise<HttpResponse> {
         try {
             const user = await this.prisma.usuario.findUnique({
-                where: { id }
+                where: { email }
             });
 
             if (!user) {

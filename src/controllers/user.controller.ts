@@ -18,9 +18,9 @@ export class UserController {
         return resp.status(data.statusCode).json(data.body);
     }
 
-    @Get(':id')
-    async getUser(@Param('id') id: string, @Res() resp: Response){
-        const data = await this.userService.Read(id);
+    @Get(':email')
+    async getUser(@Param('email') email: string, @Res() resp: Response){
+        const data = await this.userService.Read(email);
 
         return resp.status(data.statusCode).json(data.body);
     }
