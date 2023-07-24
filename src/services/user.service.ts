@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserDtoPass } from 'src/Models/User/Dtos/UserDtoPass';
+import { UserDtoWithoutPass } from 'src/Models/User/Dtos/UserDtoWithoutPass';
 import { User } from 'src/Models/User/User';
 import { PrismaConfig } from 'src/database/prismaConfig';
 import { Crud } from 'src/interfaces/crud.interface';
@@ -48,21 +49,34 @@ export class UserService implements Crud {
 
     }
 
-    async Update(data: UserDtoPass, id: string): Promise<HttpResponse> {
+    async Update(data: UserDtoWithoutPass, id: string): Promise<HttpResponse> {
         try {
-            await this.prisma.usuario.updateMany({
+            await this.prisma.usuario.update({
                 where: { id },
                 data,
             });
     
-            return success(data); 
-
+            return success(data);
         } catch (error) {
             return serviceError(error);
         }
     }
 
-    Delete(id: string): Promise<HttpResponse> {
-        throw new Error('Method not implemented.');
+    async Delete(id: string): Promise<HttpResponse> {
+        try {
+            const user = await this.Read(id);
+
+            if (user.statusCode == 400) {
+                return badRequest('Usuário não encontrado');
+            }
+
+            await this.prisma.usuario.delete({
+                where: { id }
+            });
+
+            return success('');
+        } catch (error) {
+            return serviceError(error);
+        }
     }
 }
