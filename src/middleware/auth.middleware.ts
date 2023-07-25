@@ -5,13 +5,15 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
     constructor(private readonly jwtService: JwtService) { }
-    
+
     async use(req: Request, res: Response, next: NextFunction) {
         try {
             if (req.headers.authorization) {
                 const tokenSplit = req.headers.authorization.split(" ")[1];
 
-                const valid = await this.jwtService.verifyAsync(tokenSplit);
+                const valid = await this.jwtService.verifyAsync(tokenSplit).catch(e => {
+                    return res.status(HttpStatus.UNAUTHORIZED).json(e)
+                });
 
                 return valid ? next() : res.status(HttpStatus.UNAUTHORIZED).json('Unauthorized');
             }

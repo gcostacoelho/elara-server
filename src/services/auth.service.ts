@@ -42,21 +42,22 @@ export class AuthService {
 
     async validateToken(auth: string): Promise<HttpResponse> {
         try {
-            const validToken = await this.jwtService.verifyAsync(auth);
-            const valid = {
-                "valid": true,
-                "access_token": auth
-            }
+            const validToken = await this.jwtService.verifyAsync(auth).catch(e => {
+                return success({
+                    "valid": "Token inválido",
+                    e
+                });
+            });
 
             if (validToken) {
-                return success(valid);
+                return success({
+                    "valid": true,
+                    "access_token": auth
+                });
             }
 
         } catch (error) {
-            return success({
-                "valid": "Token inválido",
-                error
-            });
+            return serviceError(error);
         }
     }
 }
