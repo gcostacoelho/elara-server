@@ -26,10 +26,10 @@ export class UserService implements Crud {
         }
     }
 
-    async Read(id: string): Promise<HttpResponse> {
+    async Read(email: string): Promise<HttpResponse> {
         try {
             const user = await this.prisma.usuario.findUnique({
-                where: { id }
+                where: { email }
             });
 
             if (!user) {
@@ -75,6 +75,22 @@ export class UserService implements Crud {
             });
 
             return success('');
+        } catch (error) {
+            return serviceError(error);
+        }
+    }
+
+    async UserWithPass(email: string): Promise<HttpResponse> {
+        try {
+            const user = await this.prisma.usuario.findUnique({
+                where: { email }
+            });
+
+            if (!user) {
+                return badRequest('Usuário não encontrado');
+            }
+
+            return success(user);
         } catch (error) {
             return serviceError(error);
         }
