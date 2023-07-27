@@ -49,29 +49,29 @@ export class UserService implements Crud {
 
     }
 
-    async Update(data: UserDtoWithoutPass, id: string): Promise<HttpResponse> {
+    async Update(data: UserDtoWithoutPass, email: string): Promise<HttpResponse> {
         try {
             await this.prisma.usuario.update({
-                where: { id },
+                where: { email },
                 data,
             });
-    
+
             return success(data);
         } catch (error) {
             return serviceError(error);
         }
     }
 
-    async Delete(id: string): Promise<HttpResponse> {
+    async Delete(email: string): Promise<HttpResponse> {
         try {
-            const user = await this.Read(id);
+            const user = await this.Read(email);
 
             if (user.statusCode == 400) {
                 return badRequest('Usuário não encontrado');
             }
 
             await this.prisma.usuario.delete({
-                where: { id }
+                where: { email }
             });
 
             return success('');

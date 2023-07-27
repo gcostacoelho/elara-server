@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Request } from "express";
-import { HttpResponse, badRequest, serviceError, success, unauthorized } from 'src/types/http';
+import { HttpResponse, badRequest, serviceError, success } from 'src/types/http';
 import { UserService } from './user.service';
 import { User } from 'src/Models/User/User';
 import { UserDtoLogin } from 'src/Models/User/Dtos/UserDtoLogin';
@@ -18,6 +17,7 @@ export class AuthService {
             const userData = await this.userService.UserWithPass(data.email);
 
             const infos = userData.body;
+            
             const user = new User(infos.nome, infos.email, infos.dataNascimento, data.senha);
 
             const hashEqualPass = await user.compareHashWithPass(infos.senha);

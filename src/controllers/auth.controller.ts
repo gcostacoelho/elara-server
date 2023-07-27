@@ -2,15 +2,13 @@ import {
     Body,
     Controller,
     Get,
-    Header,
     HttpStatus,
     Param,
     Post,
-    Req,
     Res
 } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response, Request } from "express";
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from "express";
 import { AuthService } from '../services/auth.service';
 import { UserDtoLogin } from 'src/Models/User/Dtos/UserDtoLogin';
 
@@ -35,9 +33,6 @@ export class AuthController {
         return resp.status(data.statusCode).json(data.body);
     }
     
-    /*
-    Endpoint only works in postman, don't ask me why
-    */
     @Get('validation/:token')
     async validateToken(@Param('token') auth: string, @Res() resp: Response) {        
         const data = await this.authService.validateToken(auth);
