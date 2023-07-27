@@ -25,16 +25,16 @@ export class UserController {
         return resp.status(data.statusCode).json(data.body);
     }
 
-    @Put(':id')
-    async putUserData(@Param('id') id: string, @Body() user: UserDtoWithoutPass, @Res() resp: Response){
-        const data = await this.userService.Update(user, id);
+    @Put(':email')
+    async putUserData(@Param('email') email: string, @Body() user: UserDtoWithoutPass, @Res() resp: Response){
+        const data = await this.userService.Update(user, email);
 
         return resp.status(data.statusCode).json(data.body);
     }
 
-    @Delete(':id')
-    async deleteUser(@Param('id') id: string, @Res() resp: Response){
-        const data = await this.userService.Delete(id);
+    @Delete(':email')
+    async deleteUser(@Param('email') email: string, @Res() resp: Response){
+        const data = await this.userService.Delete(email);
 
         return resp.status(data.statusCode).json(data.body);
     }
