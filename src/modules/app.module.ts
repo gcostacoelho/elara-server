@@ -13,7 +13,7 @@ import { ListController } from 'src/controllers/list.controller';
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).exclude(
-            { path: "users/add", method: RequestMethod.POST },
+            { path: "user/add", method: RequestMethod.POST },
         ).forRoutes(UserController, ListController);
     }
 }

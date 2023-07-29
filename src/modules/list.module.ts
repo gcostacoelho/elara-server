@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { ListController } from "src/controllers/list.controller";
-import { PrismaConfig } from "src/database/prismaConfig";
-import { ListService } from "src/services/list.service";
+import { ListController } from "../controllers/list.controller";
+import { PrismaConfig } from "../database/prismaConfig";
+import { ListService } from "../services/list.service";
 
 @Module({
     controllers: [ListController],
