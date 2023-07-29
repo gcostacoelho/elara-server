@@ -15,6 +15,10 @@ export class AuthService {
     async getTokenBearer(data: UserDtoLogin): Promise<HttpResponse> {
         try {
             const userData = await this.userService.UserWithPass(data.email);
+            
+            if (userData.statusCode == 400 ) {
+                return badRequest(userData.body);
+            }
 
             const infos = userData.body;
             

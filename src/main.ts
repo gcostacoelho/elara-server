@@ -15,6 +15,7 @@ async function bootstrap() {
         .addBearerAuth()
         .addTag('Authorization', 'Endpoints for generate and validate a token')
         .addTag('User', 'Endpoints for settings to the users')
+        .addTag('List', 'Endpoints for manage lists')
         .build();
 
     const document = SwaggerModule.createDocument(app, config);

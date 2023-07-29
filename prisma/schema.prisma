@@ -7,10 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario{
-    id String @id @default(uuid())
-    nome String
-    email String @unique
-    senha String
-    dataNascimento DateTime
+model Usuario {
+  id             String   @id @default(uuid())
+  nome           String
+  email          String   @unique
+  senha          String
+  dataNascimento DateTime
+  Lista          Lista[]
+}
+
+model Lista {
+  id           String   @id @default(uuid())
+  nomeLista    String   @unique
+  dataEntrega  DateTime
+  entregue Boolean @default(false)
+  usuarioEmail String
+  dataCriacao  DateTime @default(now())
+  
+  usuario Usuario? @relation(fields: [usuarioEmail], references: [email])
 }
