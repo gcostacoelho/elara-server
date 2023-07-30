@@ -1,28 +1,42 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 model Usuario {
-  id             String   @id @default(uuid())
-  nome           String
-  email          String   @unique
-  senha          String
-  dataNascimento DateTime
-  Lista          Lista[]
+    id             String   @id @default(uuid())
+    nome           String
+    email          String   @unique
+    senha          String
+    dataNascimento DateTime
+
+    Lista Lista[]
 }
 
 model Lista {
-  id           String   @id @default(uuid())
-  nomeLista    String   @unique
-  dataEntrega  DateTime
-  entregue Boolean @default(false)
-  usuarioEmail String
-  dataCriacao  DateTime @default(now())
-  
-  usuario Usuario? @relation(fields: [usuarioEmail], references: [email])
+    id           String   @id @default(uuid())
+    nomeLista    String   @unique
+    dataEntrega  DateTime
+    entregue     Boolean  @default(false)
+    usuarioEmail String
+    dataCriacao  DateTime @default(now())
+
+    Tarefa Tarefa[]
+
+    usuario Usuario? @relation(fields: [usuarioEmail], references: [email])
+}
+
+model Tarefa {
+    id               String   @id @default(uuid())
+    nomeTarefa       String   @unique
+    dataEntrega      DateTime
+    entregue         Boolean  @default(false)
+    dataCriacao      DateTime @default(now())
+    nomeLista_tarefa String
+
+    lista Lista? @relation(fields: [nomeLista_tarefa], references: [nomeLista])
 }
