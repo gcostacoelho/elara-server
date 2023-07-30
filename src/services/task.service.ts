@@ -50,7 +50,7 @@ export class TaskService implements Crud {
                 data: {
                     nomeTarefa: data.nomeTarefa,
                     dataEntrega: data.dataEntrega,
-                    nomeLista_tarefa: data.nomeLista
+                    concluida: data.concluida
                 }
             });
 

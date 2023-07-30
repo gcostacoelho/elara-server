@@ -9,5 +9,5 @@ export class ListDtoWithoutEmail {
     dataEntrega: Date;
 
     @ApiProperty()
-    entregue: boolean
+    concluida: boolean
 }

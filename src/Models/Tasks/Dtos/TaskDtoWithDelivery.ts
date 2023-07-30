@@ -9,8 +9,5 @@ export class TaskDtoWithDelivery {
     dataEntrega: Date;
 
     @ApiProperty()
-    nomeLista: string;
-
-    @ApiProperty()
-    entregue: boolean;
+    concluida: boolean;
 }
