@@ -32,17 +32,13 @@ export class UserService implements Crud {
                 where: { email }
             });
 
-            if (!user) {
-                return badRequest('Usuário não encontrado');
-            }
-
             const userWithoutPass = {
                 "id": user.id,
                 "nome": user.nome,
                 "email": user.email
             }
 
-            return success(userWithoutPass);
+            return user ? success(userWithoutPass) : badRequest("Usuário não encontrado");
         } catch (error) {
             return serviceError(error);
         }
@@ -86,11 +82,7 @@ export class UserService implements Crud {
                 where: { email }
             });
 
-            if (!user) {
-                return badRequest('Usuário não encontrado');
-            }
-
-            return success(user);
+            return user ? success(user) : badRequest("Usuário não encontrado");
         } catch (error) {
             return serviceError(error);
         }

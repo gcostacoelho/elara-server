@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ListDtoWithoutEmail {
-
+export class TaskDtoWithDelivery {
+    
     @ApiProperty()
-    nomeLista: string;
+    nomeTarefa: string;
 
     @ApiProperty()
     dataEntrega: Date;
 
     @ApiProperty()
-    concluida: boolean
+    concluida: boolean;
 }
