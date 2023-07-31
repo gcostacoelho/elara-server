@@ -6,6 +6,7 @@ import { UserController } from 'src/controllers/user.controller';
 import { AuthModule } from './auth.module';
 import { ListModule } from './list.module';
 import { ListController } from 'src/controllers/list.controller';
+import { TaskController } from 'src/controllers/task.controller';
 
 @Module({
     imports: [TaskModule, UserModule, AuthModule, ListModule]
@@ -15,6 +16,6 @@ export class AppModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).exclude(
             { path: "user/add", method: RequestMethod.POST },
-        ).forRoutes(UserController, ListController);
+        ).forRoutes(UserController, ListController, TaskController);
     }
 }

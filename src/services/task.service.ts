@@ -25,10 +25,12 @@ export class TaskService implements Crud {
         }
     }
 
-    async Read(nomeTarefa: string): Promise<HttpResponse> {
+    async Read(nomeLista: string): Promise<HttpResponse> {
         try {
-            const task = await this.prisma.tarefa.findUnique({
-                where: { nomeTarefa }
+            const task = await this.prisma.tarefa.findMany({
+                where: {
+                    nomeLista_tarefa: nomeLista
+                }
             });
 
             return task ? success(task) : badRequest("Tarefa não encontrada");
@@ -76,6 +78,20 @@ export class TaskService implements Crud {
 
         } catch (error) {
             return serviceError(error)
+        }
+    }
+
+    async DeleteTasks(nomeLista: string): Promise<HttpResponse> {
+        try {
+            await this.prisma.tarefa.deleteMany({
+                where: {
+                    nomeLista_tarefa: nomeLista
+                }
+            });
+
+            return success({});
+        } catch (error) {
+            serviceError(error);
         }
     }
 }

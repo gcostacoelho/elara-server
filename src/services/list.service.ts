@@ -4,11 +4,15 @@ import { ListDtoWithoutEmail } from "../Models/List/Dtos/ListDtoWithoutEmail";
 import { Crud } from "../interfaces/crud.interface";
 import { PrismaConfig } from "../database/prismaConfig";
 import { HttpResponse, badRequest, created, serviceError, success } from "../types/http";
+import { TaskService } from "./task.service";
 
 
 @Injectable()
 export class ListService implements Crud {
-    constructor(private readonly prisma: PrismaConfig) { }
+    constructor(
+        private readonly prisma: PrismaConfig,
+        private readonly taskService: TaskService
+    ) { }
 
     async Create(data: ListDto): Promise<HttpResponse> {
         try {
@@ -32,7 +36,25 @@ export class ListService implements Crud {
                 where: { nomeLista }
             });
 
-            return list ? success(list) : badRequest("Lista não encontrada");
+            if (list) {
+                const listTasks = await this.taskService.Read(nomeLista);
+
+                if (listTasks.statusCode == 200) {
+                    const listWithTasks = {
+                        "InfosLista": list,
+                        "Tarefas": listTasks.body
+                    }
+
+                    return success(listWithTasks);
+                }
+
+                return success({
+                    "InfosLista": list,
+                    "Tarefas": []
+                });
+            }
+
+            return badRequest("Lista não encontrada");
         } catch (error) {
             return serviceError(error);
         }
@@ -59,6 +81,8 @@ export class ListService implements Crud {
                 return badRequest(list.body);
             }
 
+            await this.taskService.DeleteTasks(nomeLista);
+
             await this.prisma.lista.delete({
                 where: { nomeLista }
             });
@@ -68,4 +92,4 @@ export class ListService implements Crud {
             serviceError(error);
         }
     }
-} 1
+}
