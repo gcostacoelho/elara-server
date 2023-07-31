@@ -18,7 +18,7 @@ export class ListService implements Crud {
         try {
             const newList = await this.prisma.lista.create({
                 data: {
-                    nomeLista: data.nomeLista,
+                    nomeLista: data.nomeLista.toLowerCase(),
                     dataEntrega: data.dataEntrega,
                     usuarioEmail: data.emailUsuario
                 }
@@ -33,7 +33,9 @@ export class ListService implements Crud {
     async Read(nomeLista: string): Promise<HttpResponse> {
         try {
             const list = await this.prisma.lista.findUnique({
-                where: { nomeLista }
+                where: { 
+                    nomeLista: nomeLista.toLowerCase()
+                }
             });
 
             if (list) {
@@ -64,7 +66,9 @@ export class ListService implements Crud {
         try {
             await this.prisma.lista.updateMany({
                 data,
-                where: { nomeLista }
+                where: { 
+                    nomeLista: nomeLista.toLowerCase()
+                }
             });
 
             return success(data);
@@ -84,7 +88,9 @@ export class ListService implements Crud {
             await this.taskService.DeleteTasks(nomeLista);
 
             await this.prisma.lista.delete({
-                where: { nomeLista }
+                where: { 
+                    nomeLista: nomeLista.toLowerCase()
+                }
             });
 
             return success({});

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserDtoPass } from 'src/Models/User/Dtos/UserDtoPass';
-import { UserDtoWithoutPass } from 'src/Models/User/Dtos/UserDtoWithoutPass';
-import { User } from 'src/Models/User/User';
-import { PrismaConfig } from 'src/database/prismaConfig';
-import { Crud } from 'src/interfaces/crud.interface';
-import { HttpResponse, badRequest, created, serviceError, success } from 'src/types/http';
+import { UserDtoPass } from '../Models/User/Dtos/UserDtoPass';
+import { UserDtoWithoutPass } from '../Models/User/Dtos/UserDtoWithoutPass';
+import { User } from '../Models/User/User';
+import { PrismaConfig } from '../database/prismaConfig';
+import { Crud } from '../interfaces/crud.interface';
+import { HttpResponse, badRequest, created, serviceError, success } from '../types/http';
 
 @Injectable()
 export class UserService implements Crud {
@@ -32,17 +32,18 @@ export class UserService implements Crud {
                 where: { email }
             });
 
-            const userWithoutPass = {
-                "id": user.id,
-                "nome": user.nome,
-                "email": user.email
+            if (user) {
+                const userInstance = new User(user.nome, user.email, user.dataNascimento, user.senha);
+            
+                const userWithoutPass = userInstance.getUserWithoutPass();
+
+                return success(userWithoutPass);
             }
 
-            return user ? success(userWithoutPass) : badRequest("Usuário não encontrado");
+            return badRequest("Usuário não encontrado");
         } catch (error) {
             return serviceError(error);
         }
-
     }
 
     async Update(data: UserDtoWithoutPass, email: string): Promise<HttpResponse> {

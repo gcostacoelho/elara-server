@@ -13,7 +13,7 @@ export class TaskService implements Crud {
         try {
             const newTask = await this.prisma.tarefa.create({
                 data: {
-                    nomeTarefa: data.nomeTarefa,
+                    nomeTarefa: data.nomeTarefa.toLowerCase(),
                     dataEntrega: data.dataEntrega,
                     nomeLista_tarefa: data.nomeLista
                 }
@@ -29,7 +29,7 @@ export class TaskService implements Crud {
         try {
             const task = await this.prisma.tarefa.findMany({
                 where: {
-                    nomeLista_tarefa: nomeLista
+                    nomeLista_tarefa: nomeLista.toLowerCase()
                 }
             });
 
@@ -50,7 +50,7 @@ export class TaskService implements Crud {
             await this.prisma.tarefa.update({
                 where: { nomeTarefa },
                 data: {
-                    nomeTarefa: data.nomeTarefa,
+                    nomeTarefa: data.nomeTarefa.toLowerCase(),
                     dataEntrega: data.dataEntrega,
                     concluida: data.concluida
                 }
@@ -71,11 +71,12 @@ export class TaskService implements Crud {
             }
 
             await this.prisma.tarefa.delete({
-                where: { nomeTarefa }
+                where: { 
+                    nomeTarefa: nomeTarefa.toLowerCase()
+                }
             });
 
             return success({});
-
         } catch (error) {
             return serviceError(error)
         }
@@ -85,7 +86,7 @@ export class TaskService implements Crud {
         try {
             await this.prisma.tarefa.deleteMany({
                 where: {
-                    nomeLista_tarefa: nomeLista
+                    nomeLista_tarefa: nomeLista.toLowerCase()
                 }
             });
 
