@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import { UserDtoWithoutPass } from './Dtos/UserDtoWithoutPass';
 
 export class User {
     private nome: string;
@@ -32,5 +33,16 @@ export class User {
         const isMatch = await bcrypt.compare(this.senha, hash);
 
         return isMatch;
+    }
+
+    /**
+     * getUserWithoutPass
+     */
+    public getUserWithoutPass(): UserDtoWithoutPass {
+        return {
+            "nome": this.nome,
+            "email": this.email,
+            "dataNascimento": this.dataNasc
+        }
     }
 }

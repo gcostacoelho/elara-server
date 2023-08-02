@@ -13,7 +13,7 @@ export class TaskService implements Crud {
         try {
             const newTask = await this.prisma.tarefa.create({
                 data: {
-                    nomeTarefa: data.nomeTarefa,
+                    nomeTarefa: data.nomeTarefa.toLowerCase(),
                     dataEntrega: data.dataEntrega,
                     nomeLista_tarefa: data.nomeLista
                 }
@@ -25,10 +25,12 @@ export class TaskService implements Crud {
         }
     }
 
-    async Read(nomeTarefa: string): Promise<HttpResponse> {
+    async Read(nomeLista: string): Promise<HttpResponse> {
         try {
-            const task = await this.prisma.tarefa.findUnique({
-                where: { nomeTarefa }
+            const task = await this.prisma.tarefa.findMany({
+                where: {
+                    nomeLista_tarefa: nomeLista.toLowerCase()
+                }
             });
 
             return task ? success(task) : badRequest("Tarefa não encontrada");
@@ -48,7 +50,7 @@ export class TaskService implements Crud {
             await this.prisma.tarefa.update({
                 where: { nomeTarefa },
                 data: {
-                    nomeTarefa: data.nomeTarefa,
+                    nomeTarefa: data.nomeTarefa.toLowerCase(),
                     dataEntrega: data.dataEntrega,
                     concluida: data.concluida
                 }
@@ -69,13 +71,28 @@ export class TaskService implements Crud {
             }
 
             await this.prisma.tarefa.delete({
-                where: { nomeTarefa }
+                where: { 
+                    nomeTarefa: nomeTarefa.toLowerCase()
+                }
             });
 
             return success({});
-
         } catch (error) {
             return serviceError(error)
+        }
+    }
+
+    async DeleteTasks(nomeLista: string): Promise<HttpResponse> {
+        try {
+            await this.prisma.tarefa.deleteMany({
+                where: {
+                    nomeLista_tarefa: nomeLista.toLowerCase()
+                }
+            });
+
+            return success({});
+        } catch (error) {
+            serviceError(error);
         }
     }
 }
