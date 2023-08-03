@@ -1,21 +1,23 @@
+import { HistoricModule } from './historic.module';
 import { TaskModule } from './task.module';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { AuthMiddleware } from 'src/middleware/auth.middleware';
+import { AuthMiddleware } from '../middleware/auth.middleware';
 import { UserModule } from './user.module';
-import { UserController } from 'src/controllers/user.controller';
+import { UserController } from '../controllers/user.controller';
 import { AuthModule } from './auth.module';
 import { ListModule } from './list.module';
-import { ListController } from 'src/controllers/list.controller';
-import { TaskController } from 'src/controllers/task.controller';
+import { ListController } from '../controllers/list.controller';
+import { TaskController } from '../controllers/task.controller';
+import { HistoricController } from 'src/controllers/historic.controller';
 
 @Module({
-    imports: [TaskModule, UserModule, AuthModule, ListModule]
+    imports: [HistoricModule, TaskModule, UserModule, AuthModule, ListModule]
 })
 
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).exclude(
             { path: "user/add", method: RequestMethod.POST },
-        ).forRoutes(UserController, ListController, TaskController);
+        ).forRoutes(UserController, ListController, TaskController, HistoricController);
     }
 }
