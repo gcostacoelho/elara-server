@@ -14,14 +14,15 @@ model Usuario {
     senha          String
     dataNascimento DateTime
 
-    Lista Lista[]
+    Lista     Lista[]
+    Historico Historico[]
 }
 
 model Lista {
     id           String   @id @default(uuid())
     nomeLista    String   @unique
     dataEntrega  DateTime
-    concluida     Boolean  @default(false)
+    concluida    Boolean  @default(false)
     usuarioEmail String
     dataCriacao  DateTime @default(now())
 
@@ -34,9 +35,18 @@ model Tarefa {
     id               String   @id @default(uuid())
     nomeTarefa       String   @unique
     dataEntrega      DateTime
-    concluida         Boolean  @default(false)
+    concluida        Boolean  @default(false)
     dataCriacao      DateTime @default(now())
     nomeLista_tarefa String
 
     lista Lista? @relation(fields: [nomeLista_tarefa], references: [nomeLista])
+}
+
+model Historico {
+    id       String   @id @default(uuid())
+    dataGrav DateTime @default(now())
+    pedido   String
+
+    Usuario      Usuario? @relation(fields: [usuarioEmail], references: [email])
+    usuarioEmail String?
 }

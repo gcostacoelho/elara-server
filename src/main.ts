@@ -7,6 +7,7 @@ async function bootstrap() {
     dotenv.config();
 
     const app = await NestFactory.create(AppModule);
+    app.enableCors();
 
     const config = new DocumentBuilder()
         .setTitle('Elara server')
@@ -17,6 +18,7 @@ async function bootstrap() {
         .addTag('User', 'Endpoints for settings to the users')
         .addTag('List', 'Endpoints for manage lists')
         .addTag('Task', 'Endpoints for manage task in the lists')
+        .addTag('Historic', 'Endpoints for read and delete historic from user')
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
