@@ -13,6 +13,11 @@ export class UserService implements Crud {
     async Create(data: UserDtoPass): Promise<HttpResponse> {
         try {
             const user = new User(data.nome, data.email, data.dataNascimento, data.senha);
+            const existentUser = await this.Read(data.email);
+
+            if (existentUser.statusCode === 200) {
+                return badRequest("Usuário já existente no banco de dados");
+            }
 
             data.senha = await user.encriptyPassword();
 
