@@ -41,7 +41,7 @@ export class TaskController {
 
     @Delete(':nomeLista')
     async deleteAllTasks(@Param('nomeLista') listName: string, @Res() resp: Response){
-        const data = await this.taskService.DeleteTasks(listName);
+        const data = await this.taskService.DeleteAllTasks(listName);
 
         return resp.status(data.statusCode).json(data.body);
     }

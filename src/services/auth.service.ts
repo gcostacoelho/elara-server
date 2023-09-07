@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpResponse, badRequest, serviceError, success } from 'src/types/http';
 import { UserService } from './user.service';
 import { User } from 'src/Models/User/User';

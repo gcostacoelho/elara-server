@@ -43,16 +43,16 @@ export class ListService implements Crud {
 
                 if (listTasks.statusCode == 200) {
                     const listWithTasks = {
-                        "InfosLista": list,
-                        "Tarefas": listTasks.body
+                        list,
+                        "tarefas": listTasks.body
                     }
 
                     return success(listWithTasks);
                 }
 
                 return success({
-                    "InfosLista": list,
-                    "Tarefas": []
+                    list,
+                    "tarefas": []
                 });
             }
 
@@ -85,7 +85,7 @@ export class ListService implements Crud {
                 return badRequest(list.body);
             }
 
-            await this.taskService.DeleteTasks(nomeLista);
+            await this.taskService.DeleteAllTasks(nomeLista);
 
             await this.prisma.lista.delete({
                 where: { 

@@ -4,6 +4,7 @@ import { Crud } from '../interfaces/crud.interface';
 import { HttpResponse, badRequest, created, serviceError, success } from '../types/http';
 import { TaskDto } from '../Models/Tasks/Dtos/TaskDto';
 import { TaskDtoWithDelivery } from '../Models/Tasks/Dtos/TaskDtoWithDelivery';
+import { ListService } from './list.service';
 
 @Injectable()
 export class TaskService implements Crud {
@@ -11,6 +12,12 @@ export class TaskService implements Crud {
 
     async Create(data: TaskDto): Promise<HttpResponse> {
         try {
+            const existentTask = await this.Read(data.nomeTarefa);
+
+            if (existentTask.statusCode === 200){
+                return badRequest("Tarefa já existe, defina outro nome para ela");
+            }
+
             const newTask = await this.prisma.tarefa.create({
                 data: {
                     nomeTarefa: data.nomeTarefa.toLowerCase(),
@@ -82,7 +89,7 @@ export class TaskService implements Crud {
         }
     }
 
-    async DeleteTasks(nomeLista: string): Promise<HttpResponse> {
+    async DeleteAllTasks(nomeLista: string): Promise<HttpResponse> {
         try {
             await this.prisma.tarefa.deleteMany({
                 where: {
