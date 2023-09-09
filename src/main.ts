@@ -19,6 +19,7 @@ async function bootstrap() {
         .addTag('List', 'Endpoints for manage lists')
         .addTag('Task', 'Endpoints for manage task in the lists')
         .addTag('Historic', 'Endpoints for read and delete historic from user')
+        .addTag('Search', 'Endpoints for search in the web')
         .build();
 
     const document = SwaggerModule.createDocument(app, config);

@@ -1,3 +1,4 @@
+import { SearchModule } from './search.module';
 import { HistoricModule } from './historic.module';
 import { TaskModule } from './task.module';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
@@ -11,7 +12,14 @@ import { TaskController } from '../controllers/task.controller';
 import { HistoricController } from 'src/controllers/historic.controller';
 
 @Module({
-    imports: [HistoricModule, TaskModule, UserModule, AuthModule, ListModule]
+    imports: [
+        SearchModule,
+        HistoricModule,
+        TaskModule,
+        UserModule,
+        AuthModule,
+        ListModule
+    ]
 })
 
 export class AppModule {
