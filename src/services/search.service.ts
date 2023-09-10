@@ -27,7 +27,14 @@ export class SearchService {
             });
 
             if (status === 200) {
-                return success(data);
+                const filteredResult = this.search.filteredResultWeb(data);
+
+                const response: ElaraResponse = {
+                    request: bodyReq.request,
+                    response: filteredResult
+                }
+
+                return success(response);
             }
 
             return badRequest(data);

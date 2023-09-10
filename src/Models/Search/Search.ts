@@ -16,7 +16,23 @@ export class Search {
         } catch (error) {
             return error;
         }
+    }
 
+    filteredResultWeb(data: any) {
+        try {
+            const infoResponse = data.webPages.value[0]; // Get first result
+
+            const webInformations = {
+                url: infoResponse.url,
+                title: infoResponse.name,
+                summary: infoResponse.snippet
+            }
+
+            return webInformations;
+            
+        } catch (error) {
+            return error
+        }
     }
 
 }
