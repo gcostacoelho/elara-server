@@ -1,5 +1,5 @@
 export class Search {
-    filteredResultVideo(data: any) {
+    public filteredResultVideo(data: any) {
         try {
             const { items } = data;
             const video = items[0]; // Get first result
@@ -18,7 +18,7 @@ export class Search {
         }
     }
 
-    filteredResultWeb(data: any) {
+    public filteredResultWeb(data: any) {
         try {
             const infoResponse = data.webPages.value[0]; // Get first result
 
@@ -35,7 +35,7 @@ export class Search {
         }
     }
 
-    filteredResultWeather(data: any){
+    public filteredResultWeather(data: any){
         try {
             const weatherInformations = {
                 city: data.name,
