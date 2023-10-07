@@ -77,40 +77,26 @@ export class SearchService {
 
     async searchWeather(request: SearchWeatherDto): Promise<HttpResponse> {
         try {
-            const { cityName, countryCode, stateName } = request;
+            const { cityName, countryCode } = request;
 
-            const { data, status } = await axios.get(`${this.weatherUrl}/geo/1.0/direct`, {
+            const { data, status } = await axios.get(`${this.weatherUrl}/data/2.5/weather`, {
                 params: {
                     q: `${cityName}, ${countryCode}`,
-                    appid: process.env.WEATHER_API_TOKEN
+                    appid: process.env.WEATHER_API_TOKEN,
+                    units: "metric",
+                    lang: "pt_br"
                 }
             });
 
-            const dataPerState = data.find((city: any) => city.state == stateName)
-            
-            const { lat, lon } = dataPerState;
-            
-            if (status == 200 && data.length > 0) {
-                const { data, status } = await axios.get(`${this.weatherUrl}/data/2.5/weather`, {
-                    params: {
-                        lat,
-                        lon,
-                        appid: process.env.WEATHER_API_TOKEN,
-                        units: "metric",
-                        lang: "pt_br"
-                    }
-                });
+            if (status === 200) {
+                const filteredResult = this.search.filteredResultWeather(data);
 
-                if (status === 200) {
-                    const filteredResult = this.search.filteredResultWeather(data);
-
-                    const response: ElaraResponse = {
-                        request,
-                        response: filteredResult
-                    }
-
-                    return success(response);
+                const response: ElaraResponse = {
+                    request,
+                    response: filteredResult
                 }
+
+                return success(response);
             }
 
             return badRequest("Erro ao puxar os dados, verifique e tente novamente");

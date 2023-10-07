@@ -9,7 +9,8 @@ import { AuthModule } from './auth.module';
 import { ListModule } from './list.module';
 import { ListController } from '../controllers/list.controller';
 import { TaskController } from '../controllers/task.controller';
-import { HistoricController } from 'src/controllers/historic.controller';
+import { HistoricController } from '../controllers/historic.controller';
+import { SearchController } from '../controllers/search.controller';
 
 @Module({
     imports: [
@@ -26,6 +27,6 @@ export class AppModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).exclude(
             { path: "user/add", method: RequestMethod.POST },
-        ).forRoutes(UserController, ListController, TaskController, HistoricController);
+        ).forRoutes(UserController, ListController, TaskController, HistoricController, SearchController);
     }
 }

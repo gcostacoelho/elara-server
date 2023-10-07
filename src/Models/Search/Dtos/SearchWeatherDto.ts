@@ -6,8 +6,4 @@ export class SearchWeatherDto {
 
     @ApiProperty()
     countryCode: string;
-
-    @ApiProperty()
-    stateName: string;
-
 }
