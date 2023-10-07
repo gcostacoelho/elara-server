@@ -1,12 +1,10 @@
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 
-import { SearchDto } from '../Models/Search/Dtos/SearchDto';
 import { SearchWeatherDto } from '../Models/Search/Dtos/SearchWeatherDto';
 import { Search } from '../Models/Search/Search';
-import { HttpResponse, badRequest, serviceError, success } from '../types/http';
 import { ElaraResponse } from '../types/ElaraResponse';
-import { stat } from 'fs';
+import { HttpResponse, badRequest, serviceError, success } from '../types/http';
 
 @Injectable()
 export class SearchService {
@@ -16,12 +14,12 @@ export class SearchService {
     private readonly bingUrl: string = "https://api.bing.microsoft.com";
     private readonly weatherUrl: string = "https://api.openweathermap.org";
 
-    async searchWeb(bodyReq: SearchDto): Promise<HttpResponse> {
+    async searchWeb(req: string): Promise<HttpResponse> {
         try {
             const { data, status } = await axios.get(`${this.bingUrl}/v7.0/search`, {
                 params: {
                     mkt: "pt-BR",
-                    q: bodyReq.request,
+                    q: req,
                 },
                 headers: {
                     "Ocp-Apim-Subscription-Key": process.env.BING_TOKEN,
@@ -32,7 +30,7 @@ export class SearchService {
                 const filteredResult = this.search.filteredResultWeb(data);
 
                 const response: ElaraResponse = {
-                    request: bodyReq.request,
+                    request: req,
                     response: filteredResult
                 }
 
@@ -45,7 +43,7 @@ export class SearchService {
         }
     }
 
-    async searchVideo(bodyReq: SearchDto): Promise<HttpResponse> {
+    async searchVideo(req: string): Promise<HttpResponse> {
         try {
             const { data, status } = await axios.get(`${this.googleUrl}/youtube/v3/search`, {
                 params: {
@@ -54,7 +52,7 @@ export class SearchService {
                     part: "snippet",
                     regionCode: "BR",
                     relevanceLanguage: "pt-br",
-                    q: bodyReq.request
+                    q: req
                 }
             });
 
@@ -62,7 +60,7 @@ export class SearchService {
                 const filteredResult = this.search.filteredResultVideo(data);
 
                 const response: ElaraResponse = {
-                    request: bodyReq,
+                    request: req,
                     response: filteredResult
                 }
 

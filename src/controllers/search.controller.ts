@@ -1,10 +1,9 @@
+import { Response } from "express";
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Response } from "express";
 
 import { SearchService } from '../services/search.service';
-import { SearchDto } from '../Models/Search/Dtos/SearchDto';
-import { SearchWeatherDto } from 'src/Models/Search/Dtos/SearchWeatherDto';
+import { SearchWeatherDto } from '../Models/Search/Dtos/SearchWeatherDto';
 
 @ApiTags('Search')
 @Controller('search')
@@ -12,16 +11,16 @@ import { SearchWeatherDto } from 'src/Models/Search/Dtos/SearchWeatherDto';
 export class SearchController {
     constructor(private readonly searchService: SearchService) { }
 
-    @Post()
-    async SearchInWeb(@Body() body: SearchDto, @Res() resp: Response) {
-        const data = await this.searchService.searchWeb(body);
+    @Get(':request')
+    async SearchInWeb(@Param('request') req: string, @Res() resp: Response) {
+        const data = await this.searchService.searchWeb(req);
 
         return resp.status(data.statusCode).json(data.body);
     }
 
-    @Post('video')
-    async SearchVideo(@Body() body: SearchDto, @Res() resp: Response){
-        const data = await this.searchService.searchVideo(body);
+    @Get('video/:request')
+    async SearchVideo(@Param('request') req: string, @Res() resp: Response){
+        const data = await this.searchService.searchVideo(req);
 
         return resp.status(data.statusCode).json(data.body);
     }
