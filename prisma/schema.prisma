@@ -21,7 +21,7 @@ model Usuario {
 model Lista {
     id           String   @id @default(uuid())
     nomeLista    String   @unique
-    dataEntrega  DateTime
+    dataEntrega  DateTime?
     concluida    Boolean  @default(false)
     usuarioEmail String
     dataCriacao  DateTime @default(now())
@@ -34,7 +34,7 @@ model Lista {
 model Tarefa {
     id               String   @id @default(uuid())
     nomeTarefa       String   @unique
-    dataEntrega      DateTime
+    dataEntrega      DateTime?
     concluida        Boolean  @default(false)
     dataCriacao      DateTime @default(now())
     nomeLista_tarefa String
