@@ -5,5 +5,5 @@ export class SearchWeatherDto {
     cityName: string;
 
     @ApiProperty()
-    countryCode: string;
+    countryName: string;
 }

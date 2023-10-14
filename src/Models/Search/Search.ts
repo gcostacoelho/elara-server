@@ -35,15 +35,14 @@ export class Search {
         }
     }
 
-    public filteredResultWeather(data: any){
+    public filteredResultWeather(data: any, cityName: string){
         try {
             const weatherInformations = {
-                city: data.name,
-                weatherDescription: data.weather.description,
-                temp: data.main.temp.toFixed(),
-                temp_min: data.main.temp_min.toFixed(),
-                temp_max: data.main.temp_max.toFixed(),
-                feels_like: data.main.feels_like.toFixed()
+                city: cityName,
+                temp: data.temp.toFixed(),
+                temp_min: data.min_temp.toFixed(),
+                temp_max: data.max_temp.toFixed(),
+                feels_like: data.feels_like.toFixed()
             }
 
             return {
