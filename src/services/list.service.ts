@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { ListDto } from "../Models/List/Dtos/ListDto";
 import { ListDtoWithoutEmail } from "../Models/List/Dtos/ListDtoWithoutEmail";
 import { Crud } from "../interfaces/crud.interface";
@@ -11,6 +11,7 @@ import { TaskService } from "./task.service";
 export class ListService implements Crud {
     constructor(
         private readonly prisma: PrismaConfig,
+        @Inject(forwardRef(() => TaskService))
         private readonly taskService: TaskService
     ) { }
 
@@ -33,27 +34,16 @@ export class ListService implements Crud {
     async Read(nomeLista: string): Promise<HttpResponse> {
         try {
             const list = await this.prisma.lista.findUnique({
-                where: { 
+                include: {
+                    Tarefa: true
+                },
+                where: {
                     nomeLista: nomeLista.toLowerCase()
                 }
             });
 
             if (list) {
-                const listTasks = await this.taskService.Read(nomeLista);
-
-                if (listTasks.statusCode == 200) {
-                    const listWithTasks = {
-                        list,
-                        "tarefas": listTasks.body
-                    }
-
-                    return success(listWithTasks);
-                }
-
-                return success({
-                    list,
-                    "tarefas": []
-                });
+                return success(list);
             }
 
             return badRequest("Lista não encontrada");
@@ -66,7 +56,7 @@ export class ListService implements Crud {
         try {
             await this.prisma.lista.updateMany({
                 data,
-                where: { 
+                where: {
                     nomeLista: nomeLista.toLowerCase()
                 }
             });
@@ -88,7 +78,7 @@ export class ListService implements Crud {
             await this.taskService.DeleteAllTasks(nomeLista);
 
             await this.prisma.lista.delete({
-                where: { 
+                where: {
                     nomeLista: nomeLista.toLowerCase()
                 }
             });

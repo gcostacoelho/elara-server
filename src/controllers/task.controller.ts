@@ -19,8 +19,15 @@ export class TaskController {
     }
 
     @Get(':nomeLista')
-    async getTaskInfos(@Param('nomeLista') listName: string, @Res() resp: Response){
+    async getTasksInfos(@Param('nomeLista') listName: string, @Res() resp: Response){
         const data = await this.taskService.Read(listName);
+
+        return resp.status(data.statusCode).json(data.body);
+    }
+
+    @Get('unique/:nomeTarefa')
+    async getUniqueTaskInfos(@Param('nomeTarefa') taskName: string, @Res() resp: Response){
+        const data = await this.taskService.ReadUniqueTask(taskName);
 
         return resp.status(data.statusCode).json(data.body);
     }
