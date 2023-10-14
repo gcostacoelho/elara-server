@@ -12,7 +12,7 @@ export class SearchService {
 
     private readonly googleUrl: string = "https://www.googleapis.com";
     private readonly bingUrl: string = "https://api.bing.microsoft.com";
-    private readonly weatherUrl: string = "https://api.openweathermap.org";
+    private readonly weatherUrl: string = "https://weather-by-api-ninjas.p.rapidapi.com";
 
     async searchWeb(req: string): Promise<HttpResponse> {
         try {
@@ -75,19 +75,21 @@ export class SearchService {
 
     async searchWeather(request: SearchWeatherDto): Promise<HttpResponse> {
         try {
-            const { cityName, countryCode } = request;
+            const { cityName, countryName } = request;
 
-            const { data, status } = await axios.get(`${this.weatherUrl}/data/2.5/weather`, {
+            const { data, status } = await axios.get(`${this.weatherUrl}/v1/weather`, {
                 params: {
-                    q: `${cityName}, ${countryCode}`,
-                    appid: process.env.WEATHER_API_TOKEN,
-                    units: "metric",
-                    lang: "pt_br"
+                    city: cityName,
+                    country: countryName
+                }, 
+                headers : {
+                    'X-RapidAPI-Key': process.env.WEATHER_API_TOKEN,
+                    'X-RapidAPI-Host': 'weather-by-api-ninjas.p.rapidapi.com'
                 }
             });
 
             if (status === 200) {
-                const filteredResult = this.search.filteredResultWeather(data);
+                const filteredResult = this.search.filteredResultWeather(data, cityName);
 
                 const response: ElaraResponse = {
                     request,
