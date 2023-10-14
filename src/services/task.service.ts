@@ -19,7 +19,10 @@ export class TaskService implements Crud {
             const list = await this.listService.Read(data.nomeLista);
 
             if (list.statusCode != 200) {
-                return badRequest("Lista não existe");
+                return badRequest({
+                    code: 'listNotFound',
+                    message: 'Lista não encontrada'
+                });
             }
 
             const existentTask = await this.ReadUniqueTask(data.nomeTarefa);
