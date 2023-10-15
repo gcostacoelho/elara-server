@@ -1,14 +1,18 @@
 import * as bcrypt from 'bcrypt';
 import { UserDtoWithoutPass } from './Dtos/UserDtoWithoutPass';
+import { List } from '../List/List';
+import { Historic } from '../History/Historic';
 
 export class User {
     private nome: string;
     private email: string;
     private dataNasc: Date;
+    private lista?: List[];
+    private historic: Historic[];
     private senha: string;
 
 
-    constructor(nome: string, email: string, dataNasc: Date, senha: string) {
+    constructor(nome: string, email: string, dataNasc: Date, senha: string, ) {
         this.nome = nome;
         this.email = email;
         this.dataNasc = dataNasc;
@@ -42,7 +46,7 @@ export class User {
         return {
             "nome": this.nome,
             "email": this.email,
-            "dataNascimento": this.dataNasc
+            "dataNascimento": this.dataNasc,
         }
     }
 }

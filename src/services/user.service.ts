@@ -34,15 +34,27 @@ export class UserService implements Crud {
     async Read(email: string): Promise<HttpResponse> {
         try {
             const user = await this.prisma.usuario.findUnique({
+                include: {
+                    Lista: true,
+                    Historico: true
+                },
                 where: { email }
             });
 
             if (user) {
-                const userInstance = new User(user.nome, user.email, user.dataNascimento, user.senha);
-            
+                const userInstance = new User(user.nome, user.email, user.dataNascimento, user.senha,);
+
                 const userWithoutPass = userInstance.getUserWithoutPass();
 
-                return success(userWithoutPass);
+                const response = {
+                    "nome": userWithoutPass.nome,
+                    "email": userWithoutPass.email,
+                    "dataNascimento": userWithoutPass.dataNascimento,
+                    'listas': user.Lista,
+                    'historico': user.Historico
+                }
+
+                return success(response);
             }
 
             return badRequest("Usuário não encontrado");
