@@ -12,6 +12,7 @@ export class HistoricService {
             const newHistoric = await this.prisma.historico.create({
                 data: {
                     pedido: data.pedido,
+                    resposta: data.resposta,
                     usuarioEmail: userEmail
                 }
             });

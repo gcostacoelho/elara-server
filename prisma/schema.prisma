@@ -46,6 +46,7 @@ model Historico {
     id       String   @id @default(uuid())
     dataGrav DateTime @default(now())
     pedido   String
+    resposta String
 
     Usuario      Usuario? @relation(fields: [usuarioEmail], references: [email])
     usuarioEmail String?
